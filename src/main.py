@@ -15,7 +15,7 @@ if __name__ == "__main__":
     agent = DQNAgent(env, input_dim, output_dim)
 
     # Train the agent
-    rewards = agent.train(num_episodes=1000)
+    rewards = agent.train(num_episodes=100)
 
     # Plot the rewards over episodes
     plt.plot(rewards)
