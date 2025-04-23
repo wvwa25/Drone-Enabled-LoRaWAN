@@ -1,0 +1,34 @@
+This is a LoRaWAN drone-enabled networking simulation in Python. This simulation demonstrates the beam steering and beamforming of a stationary phased array antenna focused on a selection of mobile drones. Please refer to the following list of requirements for the implementation details.
+
+Simulation Space/Time:
+1. The simulation space will be a cube that is 1000 meters on the x axis, 1000 meters on the y, and 100 meters on the z.
+2. The array antenna, henceforth called "transmitter", will exist at a fixed location in the center of this cube at point (500, 500, 50).
+3. The simulation should last 600 seconds, in simulation time, not real time.
+
+Node Behavior:
+1. The transmitter may physically rotate 360 degrees, in addition to being able to form and steer a transmission beam.
+2. 10 mobile receiver nodes, representing quadcopter drones, will move around the simulation space on the x, y, and z axes.
+3. These receivers will occasionally stop moving for 3-30 seconds, and move for another 3-30 seconds.
+4. The transmitter will lock on to a drone for 3-30 seconds.
+
+Receiver Drone Characteristics:
+1. Drones will have a max speed of 13.9 meters per second (m/s), or 50 kph.
+2. Drones will have an acceleration of 9.26 meters per second squared (m/s^2), or 0 kph to 50 kph in 1.5 seconds.
+
+Transmitter Antenna Characteristics:
+1. The antenna will be a 6x6 passive phased array with 36 total elements.
+2. Beamforming and beam steering will be used to accurately aim the beam at the selected receiver node.
+3. Beam steering will be done using electronic phase shifting for the array elements, for both the rows and columns of the array.
+4. The phase shift will be given as an angle theta for the row and an angle phi for the column.
+5. Phase shifting the antenna array rows will change the elevation angle.
+6. Phase shifting the antenna array columns will change the azimuth angle.
+7. Beamforming will be done applying a tapered gain, in dB, to each the three rings of the array. A seperate gain variable will exist for the first outermost ring of elements, [0,0]->[0,5]->[5,5]->[5,0], the second outmost ring of elements, [1,1]->[1,4]->[4,4]->[4,1], and so forth until the center ring is reached. 
+
+Control Setup:
+1. To control the transmitter to automatically lock on to receivers, implement a DQN agent with pytorch.
+2. This DQN agent will control both the array phase shifting for angle control, and gain for beam width control.
+3. The reward value of this agent will be RSRP, or reference signal received power. This is the signal strength of the transmitter beam as determined by the receivers, measured in dB.
+4. To get the simulation started, begin with a data set that will cause the array antennas to shift phase in the direction of the drone as the drone moves.
+5. Additionally, this initial data set must cause the beam to become more wide when the RSRP lessens and narrower when it widens.
+6. Allow for some randomization of the weights using simulated annealing to occur each episode. This will ensure that the agent will not be stuck in an endless loop.
+7. Once training is complete, plot the training graph, with episode on x-axis and reward on y-axis, using matplotlib.
